@@ -29,4 +29,7 @@ public class RobotMap {
   public static final int LEFT_BACK = 0;
   public static final int RIGHT_FRONT = 4;
   public static final int RIGHT_BACK = 3;
+  public static final int LIFT = 6;
+  // PWM IN
+  public static final int LIFT_POTENTIOMETER = 0;
 }

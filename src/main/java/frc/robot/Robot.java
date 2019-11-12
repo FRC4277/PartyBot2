@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Launcher;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +24,8 @@ import frc.robot.subsystems.DriveTrain;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static DriveTrain m_subsystem = new DriveTrain(RobotMap.LEFT_FRONT, RobotMap.RIGHT_FRONT, RobotMap.LEFT_BACK, RobotMap.RIGHT_BACK);
+  public static DriveTrain driveTrain = new DriveTrain(RobotMap.LEFT_FRONT, RobotMap.RIGHT_FRONT, RobotMap.LEFT_BACK, RobotMap.RIGHT_BACK);
+  public static Launcher launcher = new Launcher(RobotMap.LIFT, RobotMap.LIFT_POTENTIOMETER);
   public static OI m_oi;
 
   Command m_autonomousCommand;
