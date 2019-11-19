@@ -9,11 +9,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.IntakeOutakeCommand;
 
 /**
  * Add your docs here.
@@ -21,23 +24,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Launcher extends Subsystem {
   public static final double MAXIMUM_ANGLE = 1080;
   public static final double MINIMUM_ANGLE = 1013;
+  public static final double FLIPPER_ANGLE = 360 * 0.35;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private Talon lift;
   private Potentiometer potentiometer;
   private AnalogInput analogInput;
+  private Talon intakeLeft, intakeRight;
+  private Servo pusherServo;
 
-  public Launcher(int lift, int potentiometer) {
+  public Launcher(int lift, int potentiometer, int intakeLeft, int intakeRight, int pusherServo) {
     this.lift = new Talon(lift);
     this.analogInput = new AnalogInput(potentiometer);
     this.potentiometer = new AnalogPotentiometer(analogInput, 4687.5);
-    
+    this.intakeLeft = new Talon(intakeLeft);
+    this.intakeRight = new Talon(intakeRight);
+    this.intakeRight.setInverted(true); 
+    this.pusherServo = new Servo(pusherServo);
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Potentiometer", this.potentiometer.get());
     SmartDashboard.putNumber("Potentiometer Voltage", this.analogInput.getVoltage());
+    SmartDashboard.putNumber("Servo Angle", pusherServo.getAngle());
+    LiveWindow.add(pusherServo);
   }
 
   public double getAngle() {
@@ -83,9 +94,35 @@ public class Launcher extends Subsystem {
     lift.set(0);
   }
 
+  private void runIntakeOutake(double speed) {
+    intakeLeft.set(speed);
+    intakeRight.set(speed);
+  }
+
+  public void runIntake(double speed) {
+    runIntakeOutake(speed);
+  }
+
+  public void runOutake(double speed) {
+    runIntake(-speed);
+  }
+
+  public void stopIntakeOutake() {
+    runIntakeOutake(0);
+  }
+
+  public void pushFlipper() {
+    pusherServo.setAngle(FLIPPER_ANGLE);
+  }
+
+  public void resetFlipper() {
+    pusherServo.setAngle(0);
+  }
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new IntakeOutakeCommand());
   }
 }
